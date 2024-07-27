@@ -1,9 +1,9 @@
-# FINCOGNITO
+# fINCOGNITO
 made by team...
 
 ### haRBInger 2024 Hackathon by RBI
 
-## Problem Statement
+## Problem Statement-
 
 Ensuring transaction anonymity in token-based (CBDC) transactions while maintaining financial system integrity.
 
