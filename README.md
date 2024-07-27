@@ -1,4 +1,4 @@
-# fINCOGNITO
+# FINCOGNITO
 made by team...
 
 ### haRBInger 2024 Hackathon by RBI
