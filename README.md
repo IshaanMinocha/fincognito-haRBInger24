@@ -1,13 +1,13 @@
-# FINCOGNITO
-made by team...
+# project FINCOGNITO
+made by team cosmos
 
-### haRBInger 2024 Hackathon by RBI
+### for haRBInger 2024 Hackathon by RBI
 
 ## Problem Statement-
 
 Ensuring transaction anonymity in token-based (CBDC) transactions while maintaining financial system integrity.
 
-## Installation
+## Installation-
 
 (fork and clone this repo)
 
@@ -33,10 +33,14 @@ The client-side application will be available at http://localhost:5173 locally.
 
 The server-side application will be available at http://localhost:5000 locally.
 
-## Team Members
+## Team Members-
 
 Aman Sharma
+
 Khushi Minda
+
 Pratham Gupta
+
 Sujal Chauhan
+
 Ishaan Minocha
