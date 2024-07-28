@@ -1,34 +1,22 @@
 const mongoose = require('mongoose');
 
-const TransactionSchema = new mongoose.Schema(
+const ComplianceCheckSchema = new mongoose.Schema(
   {
-    sender: {
+    transaction: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-    receiver: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-    amount: {
-      type: Number,
+      ref: 'Transaction',
       required: true,
     },
     status: {
       type: String,
-      enum: ['Pending', 'Completed', 'Failed'],
+      enum: ['Pending', 'Approved', 'Rejected'],
       default: 'Pending',
     },
-    complianceCheck: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'ComplianceCheck',
-    },
+    reasons: [String], // Reasons for rejection, if any
   },
   { timestamps: true }
 );
 
-const Transaction = mongoose.model('Transaction', TransactionSchema);
+const ComplianceCheck = mongoose.model('ComplianceCheck', ComplianceCheckSchema);
 
-module.exports = Transaction;
+module.exports = ComplianceCheck;
