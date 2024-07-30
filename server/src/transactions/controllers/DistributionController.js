@@ -1,4 +1,4 @@
-const { pushDataToClusters } = require("../utils/distritbution");
+const { pushDataToClusters } = require("../../../utils/distritbution");
 const UserTransaction = require("../models/CollectiveDistributionModel");
 
 exports.storeUserTransaction = async (req, res) => {

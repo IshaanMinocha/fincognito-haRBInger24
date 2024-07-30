@@ -1,9 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const expressip = require("express-ip");
-const transactionRouter = require("./routes/TransactionRoute");
-const dhtRoutes = require("./routes/dhtRoutes");
-const userTransactionRoutes = require("./routes/DistributionRoute");
+const transactionRouter = require("./src/transactions/routes/TransactionRoute");
+const dhtRoutes = require("./src/transactions/routes/dhtRoutes");
+const userTransactionRoutes = require("./src/transactions/routes/DistributionRoute");
 
 const app = express();
 
@@ -11,10 +11,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(expressip().getIpInfoMiddleware);
-
-app.use("/transactions", transactionRouter);
-app.use("/dht", dhtRoutes);
-app.use("/user-transactions", userTransactionRoutes);
 
 app.use((req, res, next) => {
   // Website you wish to allow to connect

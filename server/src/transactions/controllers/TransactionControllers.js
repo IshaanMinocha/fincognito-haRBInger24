@@ -1,6 +1,6 @@
+const User = require('../../users/models/User');
 const ComplianceCheck = require('../models/ComplianceCheck');
 const Transaction = require('../models/Transaction');
-const User = require('../models/User');
 
 const initiateTransaction = async (req, res) => {
   const { senderId, receiverId, amount } = req.body;
@@ -17,7 +17,8 @@ const initiateTransaction = async (req, res) => {
       return res.status(400).json({ status: 400, message: 'Insufficient balance' });
     }
 
-    const transaction = new Transaction({ sender: senderId, receiver: receiverId, amount });
+    const transaction = new Transaction({ sender: senderId, recipient: receiverId, amount });
+    console.log('Transaction before save:', transaction);  // Logging the transaction before saving
     await transaction.save();
 
     sender.balance -= amount;
@@ -28,7 +29,8 @@ const initiateTransaction = async (req, res) => {
 
     return res.status(200).json({ status: 200, message: 'Transaction successful', transaction });
   } catch (error) {
-    return res.status(500).json({ status: 500, message: 'Internal server error' });
+    console.error('Error during transaction:', error.message);  // Logging the error message
+    return res.status(500).json({ status: 500, message: 'Internal server error', error: error.message });
   }
 };
 
@@ -50,7 +52,7 @@ const complianceCheck = async (req, res) => {
 
     return res.status(200).json({ status: 200, message: 'Compliance check completed', complianceCheck });
   } catch (error) {
-    return res.status(500).json({ status: 500, message: 'Internal server error' });
+    return res.status(500).json({ status: 500, message: 'Internal server error', error: error.message });
   }
 };
 

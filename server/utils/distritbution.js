@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 const clusterURIs = require("../constants/clusterUri");
-const UserTransaction = require("../models/CollectiveDistributionModel");
+const UserTransaction = require("../src/transactions/models/CollectiveDistributionModel");
 
 function hashKey(key) {
   return (
@@ -14,10 +14,7 @@ async function pushDataToClusters(userTransaction) {
   const connections = [];
   try {
     for (const uri of clusterURIs) {
-      const conn = await mongoose.createConnection(uri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      });
+      const conn = await mongoose.createConnection(uri);
       connections.push(conn);
       const session = await conn.startSession();
       session.startTransaction();
@@ -53,10 +50,7 @@ async function checkAndRestoreData() {
   let primaryData;
 
   try {
-    const primaryConn = await mongoose.createConnection(primaryURI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    const primaryConn = await mongoose.createConnection(primaryURI);
     const PrimaryModel = primaryConn.model(
       "UserTransaction",
       UserTransaction.schema
@@ -70,10 +64,7 @@ async function checkAndRestoreData() {
 
   for (const uri of clusterURIs.slice(1)) {
     try {
-      const conn = await mongoose.createConnection(uri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      });
+      const conn = await mongoose.createConnection(uri);
       const UserTransactionModel = conn.model(
         "UserTransaction",
         UserTransaction.schema

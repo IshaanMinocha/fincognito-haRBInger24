@@ -1,4 +1,4 @@
-const DHT = require('../utils/dht');
+const DHT = require('../../../utils/dht');
 
 const dht = new DHT();
 
