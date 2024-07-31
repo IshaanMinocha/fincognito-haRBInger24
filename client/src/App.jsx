@@ -7,6 +7,9 @@ import Footer from "./components/Footer";
 import About from "./pages/About";
 import TransactionsPage from "./pages/TransactionsPage";
 import CompliancePage from "./pages/CompliancePage";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import Transaction from "./components/Transaction";
 
 function App() {
   return (
@@ -23,6 +26,24 @@ function App() {
         <Route path="/about" element={
           <>
             <About />
+            <BackToTop />
+          </>
+        } />
+        <Route path="/login" element={
+          <>
+            <Login />
+            <BackToTop />
+          </>
+        } />
+        <Route path="/register" element={
+          <>
+            <Register />
+            <BackToTop />
+          </>
+        } />
+        <Route path="/transact" element={
+          <>
+            <Transaction />
             <BackToTop />
           </>
         } />

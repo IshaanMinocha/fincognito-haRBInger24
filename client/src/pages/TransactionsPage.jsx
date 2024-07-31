@@ -1,12 +1,48 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-
-const mockTransactions = [
-  { id: 1, sender: 'Alice', receiver: 'Bob', amount: 500, timestamp: '2024-07-24', compliant: true },
-  { id: 2, sender: 'Charlie', receiver: 'Dave', amount: 1500, timestamp: '2024-07-23', compliant: false },
-];
+import {jwtDecode} from 'jwt-decode';
 
 function TransactionsPage() {
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+        const decoded = jwtDecode(token);
+        const userId = decoded.id;
+        // console.log(userId);
+        const response = await axios.get('http://localhost:3000/transaction-old/api/v1/transactions', 
+        {
+          userId
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          }
+        });
+
+        setTransactions(response.data.transactions);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchTransactions();
+  }, []);
+
+  if (loading) return <Typography variant="h6">Loading...</Typography>;
+  if (error) return <Typography variant="h6" color="error">Error: {error}</Typography>;
+
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
@@ -20,19 +56,23 @@ function TransactionsPage() {
               <TableCell>Sender</TableCell>
               <TableCell>Receiver</TableCell>
               <TableCell>Amount</TableCell>
+              <TableCell>Status</TableCell>
               <TableCell>Timestamp</TableCell>
-              <TableCell>Compliant</TableCell>
+              <TableCell>Completed</TableCell>
+              <TableCell>Flagged</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {mockTransactions.map((transaction) => (
-              <TableRow key={transaction.id}>
-                <TableCell>{transaction.id}</TableCell>
+            {transactions.map((transaction) => (
+              <TableRow key={transaction._id}>
+                <TableCell>{transaction._id}</TableCell>
                 <TableCell>{transaction.sender}</TableCell>
-                <TableCell>{transaction.receiver}</TableCell>
+                <TableCell>{transaction.recipient}</TableCell>
                 <TableCell>{transaction.amount}</TableCell>
-                <TableCell>{transaction.timestamp}</TableCell>
-                <TableCell>{transaction.compliant ? 'Yes' : 'No'}</TableCell>
+                <TableCell>{transaction.status}</TableCell>
+                <TableCell>{new Date(transaction.timestamp).toLocaleString()}</TableCell>
+                <TableCell>{transaction.isCompleted ? 'Yes' : 'No'}</TableCell>
+                <TableCell>{transaction.isFlagged ? 'Yes' : 'No'}</TableCell>
               </TableRow>
             ))}
           </TableBody>

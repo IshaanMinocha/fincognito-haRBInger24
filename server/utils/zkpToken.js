@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const Transaction = require('../src/transactions/models/Transaction');
 
 const generateToken = (transactionId, isCompleted, isFlagged) => {
+  console.log("generate called.")
   const tokenData = `${transactionId}-${isCompleted}-${isFlagged}`;
   const token = crypto.createHash('sha256').update(tokenData).digest('hex');
   return token;
@@ -9,6 +10,7 @@ const generateToken = (transactionId, isCompleted, isFlagged) => {
 
 const saveTokenToTransaction = async (transactionId, token, isCompleted, isFlagged) => {
   try {
+    console.log("saved token to transaction called.")
     const transaction = await Transaction.findById(transactionId);
     if (!transaction) throw new Error('Transaction not found');
 

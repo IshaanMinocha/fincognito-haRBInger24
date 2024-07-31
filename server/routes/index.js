@@ -3,7 +3,7 @@ const users = require('../src/users/routes');
 const transactions = require('../src/transactions/transactionRoutes');
 // const validateAuth = require('../middlewares/validateAuth');
 // const getData = require('../middlewares/getData');
-const transactionRouter = require("../src/transactions/routes/TransactionRoute");
+// const transactionRouter = require("../src/transactions/routes/TransactionRoute");
 const dhtRoutes = require("../src/transactions/routes/dhtRoutes");
 const userTransactionRoutes = require("../src/transactions/routes/DistributionRoute");
 

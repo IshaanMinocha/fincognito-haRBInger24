@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
+// const { generateToken } = require('../../../utils/zkpToken');
 
 const transactionSchema = new mongoose.Schema({
   sender: {
@@ -50,7 +51,6 @@ const transactionSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  //TODO: to be populated by aman,s compliance check
   isCompleted: {
     type: Boolean,
     default: false
@@ -64,15 +64,19 @@ const transactionSchema = new mongoose.Schema({
   collection: 'Transaction'
 });
 
-transactionSchema.pre('validate', function(next) {
+transactionSchema.pre('validate', function (next) {
   if (!this.hash) {
     const transactionString = `${this.sender}-${this.recipient}-${this.amount}-${this.timestamp}`;
     this.hash = crypto.createHash('sha256').update(transactionString).digest('hex');
-    console.log('Hash generated:', this.hash);  // Logging the hash value
-  } else {
-    console.log('Hash already set:', this.hash);  // Logging if the hash is already set
+    console.log('Hash generated:', this.hash);
+  }
+  if (!this.token) {
+    const tokenData = `${this._id}-${this.isCompleted}-${this.isFlagged}`;
+    this.token = crypto.createHash('sha256').update(tokenData).digest('hex');
   }
   next();
 });
 
-module.exports = mongoose.model('Transaction', transactionSchema);
+const Transaction = mongoose.model('Transaction', transactionSchema);
+
+module.exports = Transaction;
