@@ -30,6 +30,10 @@ const transactionSchema = new mongoose.Schema({
     enum: ['Pending', 'Completed', 'Failed'],
     default: 'Pending'
   },
+  token: {
+    type: String,
+    required: true
+  },
   complianceCheck: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'ComplianceCheck'
@@ -39,6 +43,15 @@ const transactionSchema = new mongoose.Schema({
     default: false
   },
   isDeleted: {
+    type: Boolean,
+    default: false
+  },
+  isFlagged: {
+    type: Boolean,
+    default: false
+  },
+  //TODO: to be populated by aman,s compliance check
+  isCompleted: {
     type: Boolean,
     default: false
   },

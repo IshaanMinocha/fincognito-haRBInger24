@@ -1,6 +1,7 @@
 const User = require('../../users/models/User');
 const ComplianceCheck = require('../models/ComplianceCheck');
 const Transaction = require('../models/Transaction');
+const { generateToken, saveTokenToTransaction, verifyToken } = require('../../../utils/zkpToken');
 
 const initiateTransaction = async (req, res) => {
   const { senderId, receiverId, amount } = req.body;
@@ -19,6 +20,9 @@ const initiateTransaction = async (req, res) => {
 
     const transaction = new Transaction({ sender: senderId, recipient: receiverId, amount });
     console.log('Transaction before save:', transaction);  // Logging the transaction before saving
+
+    // const token = generateToken(transaction);
+    transaction.isCompleted==true;
     await transaction.save();
 
     sender.balance -= amount;
@@ -27,7 +31,11 @@ const initiateTransaction = async (req, res) => {
     await sender.save();
     await receiver.save();
 
-    return res.status(200).json({ status: 200, message: 'Transaction successful', transaction });
+    const token = generateToken(transaction._id, transaction.isCompleted, transaction.isFlagged);
+    // console.log(token);
+    await saveTokenToTransaction(transaction._id, token, transaction.isCompleted, transaction.isFlagged);
+
+    return res.status(200).json({ status: 200, message: 'Transaction successful', transaction, token });
   } catch (error) {
     console.error('Error during transaction:', error.message);  // Logging the error message
     return res.status(500).json({ status: 500, message: 'Internal server error', error: error.message });
@@ -50,7 +58,26 @@ const complianceCheck = async (req, res) => {
     transaction.complianceCheck = complianceCheck._id;
     await transaction.save();
 
-    return res.status(200).json({ status: 200, message: 'Compliance check completed', complianceCheck });
+    const token = generateToken(transaction._id, transaction.isCompleted, transaction.isFlagged);
+    await saveTokenToTransaction(transaction._id, token, transaction.isCompleted, transaction.isFlagged);
+
+    return res.status(200).json({ status: 200, message: 'Compliance check completed', complianceCheck, token });
+  } catch (error) {
+    return res.status(500).json({ status: 500, message: 'Internal server error', error: error.message });
+  }
+};
+
+const verifyTransactionToken = async (req, res) => {
+  const { transactionId, token } = req.body;
+
+  try {
+    const verificationResult = await verifyToken(transactionId, token);
+
+    if (verificationResult.success) {
+      return res.status(200).json({ status: 200, message: 'Token verified', ...verificationResult });
+    } else {
+      return res.status(400).json({ status: 400, message: verificationResult.message });
+    }
   } catch (error) {
     return res.status(500).json({ status: 500, message: 'Internal server error', error: error.message });
   }
@@ -59,4 +86,5 @@ const complianceCheck = async (req, res) => {
 module.exports = {
   initiateTransaction,
   complianceCheck,
+  verifyTransactionToken,
 };
