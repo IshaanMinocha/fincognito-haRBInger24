@@ -6,7 +6,6 @@ const Register = () => {
     const [formData, setFormData] = useState({
         username: '', email: '', password: '', passwordConfirmation: '', name: '', lastName: ''
     });
-    const [token, setToken] = useState();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,9 +14,8 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:3000/users/api/v1/signup', formData);
-            setToken(response.data.token);
-            localStorage.setItem('token', token);
+            const response = await axios.post('http://localhost:5000/users/api/v1/signup', formData);
+            localStorage.setItem('token', response.data.token);
         } catch (error) {
             console.error('Error registering', error);
         }

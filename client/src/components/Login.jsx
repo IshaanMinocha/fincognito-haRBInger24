@@ -10,7 +10,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/users/api/v1/login', { emailOrUsername, password });
+            const response = await axios.post('http://localhost:5000/users/api/v1/login', { emailOrUsername, password });
             const {token} = response.data;
             localStorage.setItem('token', token);
             navigate('/transactions')

@@ -17,8 +17,7 @@ function TransactionsPage() {
         }
         const decoded = jwtDecode(token);
         const userId = decoded.id;
-        // console.log(userId);
-        const response = await axios.get('http://localhost:3000/transaction-old/api/v1/transactions', 
+        const response = await axios.get('http://localhost:5000/transaction-old/api/v1/transactions', 
         {
           userId
         },
